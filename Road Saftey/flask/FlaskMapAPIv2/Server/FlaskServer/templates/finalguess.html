@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Please work now </title>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMfj9lDjQ1imr6X1y4mSmAzqDPct-l0bQ"></script>
+<script type="text/javascript" src="C:\Users\prasa\Movehack\RoadSafety\FlaskMapAPIv2\Server\FlaskServer\templates\geoFencing.js"></script>
+<script type="text/javascript">
+var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var position = [76.98978000000001, 11.077800000000002];
+var intervalID = setInterval(update_values,1000);
+
+function initialize() { 
+    var latlng = new google.maps.LatLng(position[0], position[1]);
+    var myOptions = {
+        zoom: 16,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+    marker = new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: "Latitude:"+position[0]+" | Longitude:"+position[1]
+    });
+}
+  
+
+function update_values() {
+        $.getJSON($SCRIPT_ROOT + '/_stuff',
+               
+      function(data) {
+        $('#lat').text(data.lat);
+        $('#longi').text(data.longi);
+        console.log(data)
+          var result = [ data.lat , data.longi];
+        transition(result);
+        window.setTimeout(function() {
+          map.panTo(marker.getPosition());
+      }, 300);
+        
+      });
+      
+    };
+    
+function stopTextColor() {
+      clearInterval(intervalID);
+    }
+
+//Load google map
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+var numDeltas = 100;
+var delay = 10;
+var i = 0;
+var deltaLat;
+var deltaLng;
+
+function transition(result){
+    i = 0;
+    deltaLat = (result[0] - position[0])/numDeltas;
+    deltaLng = (result[1] - position[1])/numDeltas;
+    moveMarker();
+}
+
+function moveMarker(){
+    position[0] += deltaLat;
+    position[1] += deltaLng;
+    var latlng = new google.maps.LatLng(position[0], position[1]);
+    marker.setTitle("Latitude:"+position[0]+" | Longitude:"+position[1]);
+    marker.setPosition(latlng);
+    if(i!=numDeltas){
+        i++;
+        setTimeout(moveMarker, delay);
+    }
+}
+
+
+
+//geoFencing
+var runMaps = function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: position[0],
+                    lng: position[1]
+                },
+                zoom: 18
+            });
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+                console.log(event.latLng.toUrlValue(5));
+            });
+
+            function placeMarker(location) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+            }
+            var all_overlays = [];
+            var selectedShape;
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.MARKER,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        //google.maps.drawing.OverlayType.MARKER,
+                        google.maps.drawing.OverlayType.CIRCLE,
+                        google.maps.drawing.OverlayType.POLYGON,
+                        google.maps.drawing.OverlayType.RECTANGLE
+                    ]
+                },
+                markerOptions: {
+                    icon: 'images/beachflag.png'
+                },
+                circleOptions: {
+                    fillColor: '#ffff00',
+                    fillOpacity: 0.2,
+                    strokeWeight: 3,
+                    clickable: false,
+                    editable: true,
+                    zIndex: 1
+                },
+                polygonOptions: {
+                    clickable: true,
+                    draggable: true,
+                    editable: true,
+                    fillColor: '#ffff00',
+                    fillOpacity: 1,
+
+                },
+                rectangleOptions: {
+                    clickable: true,
+                    draggable: true,
+                    editable: true,
+                    fillColor: '#ffff00',
+                    fillOpacity: 0.5,
+                }
+            });
+
+            function clearSelection() {
+                if (selectedShape) {
+                    selectedShape.setEditable(false);
+                    selectedShape = null;
+                }
+            }
+
+            function setSelection(shape) {
+                clearSelection();
+                selectedShape = shape;
+                shape.setEditable(true);
+                // google.maps.event.addListener(selectedShape.getPath(), 'insert_at', getPolygonCoords(shape));
+                // google.maps.event.addListener(selectedShape.getPath(), 'set_at', getPolygonCoords(shape));
+            }
+
+            function deleteSelectedShape() {
+                if (selectedShape) {
+                    selectedShape.setMap(null);
+                }
+            }
+
+            function deleteAllShape() {
+                for (var i = 0; i < all_overlays.length; i++) {
+                    all_overlays[i].overlay.setMap(null);
+                }
+                all_overlays = [];
+            }
+
+            function CenterControl(controlDiv, map) {
+
+                // Set CSS for the control border.
+                var controlUI = document.createElement('div');
+                controlUI.style.backgroundColor = '#fff';
+                controlUI.style.border = '2px solid #fff';
+                controlUI.style.borderRadius = '3px';
+                controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.marginBottom = '22px';
+                controlUI.style.textAlign = 'center';
+                controlUI.title = 'Select to delete the shape';
+                controlDiv.appendChild(controlUI);
+
+                // Set CSS for the control interior.
+                var controlText = document.createElement('div');
+                controlText.style.color = 'rgb(25,25,25)';
+                controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+                controlText.style.fontSize = '16px';
+                controlText.style.lineHeight = '38px';
+                controlText.style.paddingLeft = '5px';
+                controlText.style.paddingRight = '5px';
+                controlText.innerHTML = 'Delete Selected Area';
+                controlUI.appendChild(controlText);
+
+                // Setup the click event listeners: simply set the map to Chicago.
+                controlUI.addEventListener('click', function() {
+                    deleteSelectedShape();
+                });
+
+            }
+            drawingManager.setMap(map);
+            var getPolygonCoords = function(newShape) {
+                console.log("We are one");
+                var len = newShape.getPath().getLength();
+                for (var i = 0; i < len; i++) {
+                    console.log(newShape.getPath().getAt(i).toUrlValue(6));
+                }
+            };
+
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function(event) {
+
+                event.getPath().getLength();
+                google.maps.event.addListener(event.getPath(), 'insert_at', function() {
+                    var len = event.getPath().getLength();
+                    for (var i = 0; i < len; i++) {
+                        console.log(event.getPath().getAt(i).toUrlValue(5));
+                    }
+                });
+                google.maps.event.addListener(event.getPath(), 'set_at', function() {
+                    var len = event.getPath().getLength();
+                    for (var i = 0; i < len; i++) {
+                        console.log(event.getPath().getAt(i).toUrlValue(5));
+                    }
+                });
+            });
+
+            google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+
+                all_overlays.push(event);
+                if (event.type !== google.maps.drawing.OverlayType.MARKER) {
+                    drawingManager.setDrawingMode(null);
+                    //Write code to select the newly selected object.
+
+                    var newShape = event.overlay;
+                    newShape.type = event.type;
+                    google.maps.event.addListener(newShape, 'click', function() {
+                        setSelection(newShape);
+                    });
+
+                    setSelection(newShape);
+                }
+            });
+
+
+            var centerControlDiv = document.createElement('div');
+            var centerControl = new CenterControl(centerControlDiv, map);
+
+            centerControlDiv.index = 1;
+            map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+        });
+    }
+};
+</script>
+<style>
+#map{
+    width: 100%;
+    height: 700px;
+}
+</style>
+</head>
+<body onload="runMaps(">
+    <div id="map"></div>
+</body>
+</html>
