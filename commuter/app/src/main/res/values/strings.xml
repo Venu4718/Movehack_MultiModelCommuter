@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">commuter</string>
+    <string name="nav_walk">walk</string>
+    <string name="nav_car">car</string>
+    <string name="nav_bus">bus</string>
+    <string name="nav_metro">metro</string>
+    <string name="nav_Walk">Walk</string>
+    <string name="nav_cab">Cab</string>
+    <string name="nav_Bus">Bus</string>
+    <string name="nav_Metro">Metro</string>
+    <string name="nav_Cab">Cab</string>
+
+    <string name="google_map_api"> AIzaSyBBCj33r8Ks8kEgIvC9hUwZ4h4Q2UvmgyY</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

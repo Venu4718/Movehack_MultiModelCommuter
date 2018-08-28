@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_walk"
+        android:layout_height="match_parent"
+        android:icon="@drawable/baseline_directions_walk_black_24dp"
+        android:title="@string/nav_Walk" />
+    <item
+        android:id="@+id/nav_cab"
+        android:icon="@drawable/baseline_drive_eta_black_24dp"
+        android:title="@string/nav_Cab" />
+    <item
+        android:id="@+id/nav_bus"
+        android:icon="@drawable/baseline_directions_bus_black_24dp"
+        android:title="@string/nav_Bus" />
+    <item
+        android:id="@+id/nav_metro"
+        android:icon="@drawable/baseline_directions_subway_black_24dp"
+        android:title="@string/nav_Metro" />
+</menu>

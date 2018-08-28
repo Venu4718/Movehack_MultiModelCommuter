@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.knigh.myapplication.MainActivity"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_back" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:text="Welcome to Blahblah"
+            android:textColor="#FF000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="17dp"
+            android:textColor="@color/text_color"
+            android:text="Our app guides you to pick nearby available modes of transport. With this app you can be both driver and passenger. Hope you guys will enjoy.Our app guides you to pick nearby available modes of transport. With this app you can be both driver and passenger. Hope you guys will enjoy." />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_margin="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Learn more"
+                android:textSize="10sp"
+                android:background="@drawable/button_style"/>
+
+            <Button
+                android:id="@+id/register_btn"
+                android:layout_margin="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="Register Now"
+                android:textSize="10sp"
+                android:background="@drawable/button_style2"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="70dp">
+
+            <EditText
+                android:id="@+id/username_login"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/use_pass_back"
+                android:inputType="textAutoComplete"
+                android:hint="USER NAME"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/password_login"
+                android:layout_width="250dp"
+                android:background="@drawable/use_pass_back"
+                android:layout_height="wrap_content"
+                android:hint="PASSWORD"
+                android:inputType="textPassword"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/loginbutton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/login"
+                android:text="Login In"
+                android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>
